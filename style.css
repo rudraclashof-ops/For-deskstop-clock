@@ -1,0 +1,11 @@
+/* SPIDER LEGS */
+.leg {
+    position: absolute;
+    width: 80px;
+    height: 2px;
+    background: orange;
+    top: 50%;
+    left: 50%;
+    transform-origin: left;
+    box-shadow: 0 0 10px orange;
+}
