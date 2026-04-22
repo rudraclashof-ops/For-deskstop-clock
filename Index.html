@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spider Gear Clock - Desktop</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle, #000000, #020202);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* MAIN CLOCK */
+.clock {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255,140,0,0.2),
+                inset 0 0 40px rgba(255,140,0,0.2);
+}
+
+/* GLOW RING */
+.clock::before {
+    content: "";
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,140,0,0.2);
+    box-shadow: 0 0 50px orange;
+}
+
+/* GEARS */
+.gear {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid orange;
+    box-shadow: 0 0 25px orange, inset 0 0 10px orange;
+    animation: spin linear infinite;
+}
+
+.gear::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 2px dashed orange;
+    border-radius: 50%;
+}
+
+.gear1 {
+    width: 220px;
+    height: 220px;
+    top: -60px;
+    left: -60px;
+    animation-duration: 12s;
+}
+
+.gear2 {
+    width: 140px;
+    height: 140px;
+    bottom: -40px;
+    right: -40px;
+    animation-duration: 7s;
+}
+
+.gear3 {
+    width: 90px;
+    height: 90px;
+    top: 60%;
+    left: -80px;
+    animation-duration: 5s;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* NUMBERS */
+.number {
+    position: absolute;
+    color: orange;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 10px orange;
+    transform: translate(-50%, -50%);
+}
+
+/* HANDS */
+.hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom;
+    transform: translateX(-50%) rotate(0deg);
+    background: orange;
+    box-shadow: 0 0 15px orange;
+}
+
+.hour { height: 120px; width: 6px; }
+.minute { height: 170px; width: 4px; }
+.second { height: 200px; width: 2px; background: red; }
+
+/* SPIDER CENTER */
+.spider {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: orange;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 25px orange;
+}
+
+/* SPIDER LEGS */
+.leg {
+    position: absolute;
+    width: 80px;
+    height: 2px;
+    background: orange;
+    top: 50%;
+    left: 50%;
+    transform-origin: left;
+    box-shadow: 0 0 10px orange;
+}
+
+/* 8 legs */
+.leg:nth-child(1) { transform: rotate(0deg); }
+.leg:nth-child(2) { transform: rotate(45deg); }
+.leg:nth-child(3) { transform: rotate(90deg); }
+.leg:nth-child(4) { transform: rotate(135deg); }
+.leg:nth-child(5) { transform: rotate(180deg); }
+.leg:nth-child(6) { transform: rotate(225deg); }
+.leg:nth-child(7) { transform: rotate(270deg); }
+.leg:nth-child(8) { transform: rotate(315deg); }
+
+</style>
+</head>
+
+<body>
+
+<div class="clock" id="clock">
+
+    <!-- GEARS -->
+    <div class="gear gear1"></div>
+    <div class="gear gear2"></div>
+    <div class="gear gear3"></div>
+
+</div>
+
+<script>
+const clock = document.getElementById("clock");
+
+/* NUMBERS */
+for (let i = 1; i <= 12; i++) {
+    const num = document.createElement("div");
+    num.className = "number";
+    num.innerText = i;
+
+    const angle = (i * 30) * Math.PI / 180;
+    const radius = 220;
+
+    num.style.left = 250 + radius * Math.sin(angle) + "px";
+    num.style.top = 250 - radius * Math.cos(angle) + "px";
+
+    clock.appendChild(num);
+}
+
+/* HANDS */
+function createHand(cls) {
+    const hand = document.createElement("div");
+    hand.className = "hand " + cls;
+    clock.appendChild(hand);
+    return hand;
+}
+
+const hour = createHand("hour");
+const minute = createHand("minute");
+const second = createHand("second");
+
+/* SPIDER CENTER */
+const spider = document.createElement("div");
+spider.className = "spider";
+clock.appendChild(spider);
+
+/* LEGS */
+for (let i = 0; i < 8; i++) {
+    const leg = document.createElement("div");
+    leg.className = "leg";
+    spider.appendChild(leg);
+}
+
+/* CLOCK LOGIC */
+function updateClock() {
+    const now = new Date();
+
+    const s = now.getSeconds();
+    const m = now.getMinutes();
+    const h = now.getHours();
+
+    const sDeg = s * 6;
+    const mDeg = m * 6 + s * 0.1;
+    const hDeg = h * 30 + m * 0.5;
+
+    second.style.transform = `translateX(-50%) rotate(${sDeg}deg)`;
+    minute.style.transform = `translateX(-50%) rotate(${mDeg}deg)`;
+    hour.style.transform = `translateX(-50%) rotate(${hDeg}deg)`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+
+</body>
+  </html>
